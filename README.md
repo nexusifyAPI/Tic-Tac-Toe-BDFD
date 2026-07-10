@@ -109,28 +109,7 @@ After a PvP game ends:
 
 ---
 
-## File structure
-
-```
-Repositorio/
-│
-├── README.md                          (this file - English)
-├── LEEME.md                           (Spanish version)
-│
-├── English/
-│   ├── Tic-Tac-Toe_Code.md            (!ttt command)
-│   ├── Callback 1 ($onInteraction).md (menu, challenges, forfeit, rematch)
-│   └── Callback 2 ($onInteraction).md (cell clicks + minimax AI)
-│
-└── Español/
-    ├── Tres-en-raya_BDFD.md           (comando !ttt)
-    ├── Callback 1 ($onInteraction).md (menú, retos, rendirse, revancha)
-    └── Callback 2 ($onInteraction).md (jugadas + IA minimax)
-```
-
----
-
-## Usage
+## Usage example
 
 ### Play vs AI
 
