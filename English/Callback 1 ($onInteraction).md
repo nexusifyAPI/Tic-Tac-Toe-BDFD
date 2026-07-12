@@ -1,10 +1,10 @@
-# Disparador
+# Trigger
 
 ```
 $onInteraction
 ```
 
-## Codigo
+## Code
 
 ```
 $nomention
@@ -18,33 +18,33 @@ $var[menuAuthor;$splitText[2]]
 $if[$authorID!=$var[menuAuthor]]
 $ephemeral
 $removeButtons
-$description[❌ No puedes usar este menu, no es tuyo!]
+$description[❌ You cannot use this menu, it's not yours!]
 $stop
 $endif
 $defer
-$var[diffName;Facil]
+$var[diffName;Easy]
 $var[diffColor;#57F287]
 $if[$var[dif]==n]
 $var[diffName;Normal]
 $var[diffColor;#5865F2]
 $endif
 $if[$var[dif]==h]
-$var[diffName;Dificil]
+$var[diffName;Hard]
 $var[diffColor;#FEE75C]
 $endif
 $if[$var[dif]==i]
-$var[diffName;Imposible]
+$var[diffName;Impossible]
 $var[diffColor;#ED4245]
 $endif
-$title[Partida vs IA - Nivel: $var[diffName]]
+$title[Game vs AI - Level: $var[diffName]]
 $var[rnd;$random[0;2]]
 $if[$var[rnd]==0]
-$description[Jugador: <@$authorID> (❌)
-IA: 🤖 (⭕)
+$description[Player: <@$authorID> (❌)
+AI: 🤖 (⭕)
 
-Turno de: ❌ (¡Tu empiezas!)]
+Turn: ❌ (You start!)]
 $color[$var[diffColor]]
-$footer[$authorID|IA|$var[dif]|e.e.e.e.e.e.e.e.e|n|n]
+$footer[$authorID|AI|$var[dif]|e.e.e.e.e.e.e.e.e|n|n]
 $removeAllComponents
 $addButton[no;p0;​;secondary;no;⬜]
 $addButton[no;p1;​;secondary;no;⬜]
@@ -55,14 +55,14 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $else
-$description[IA: 🤖 (❌)
-Jugador: <@$authorID> (⭕)
+$description[AI: 🤖 (❌)
+Player: <@$authorID> (⭕)
 
-Turno de: ⭕ (¡La IA empieza!)]
+Turn: ⭕ (AI starts!)]
 $color[$var[diffColor]]
-$footer[IA|$authorID|$var[dif]|e.e.e.e.X.e.e.e.e|n|n]
+$footer[AI|$authorID|$var[dif]|e.e.e.e.X.e.e.e.e|n|n]
 $removeAllComponents
 $addButton[no;p0;​;secondary;no;⬜]
 $addButton[no;p1;​;secondary;no;⬜]
@@ -73,7 +73,7 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $endif
 $stop
 $endif
@@ -85,25 +85,25 @@ $var[retado;$splitText[3]]
 $if[$authorID!=$var[retado]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo <@$var[retado]> puede aceptar este reto!]
+$description[❌ ❌ Only <@$var[retado]> can accept this challenge!]
 $stop
 $endif
 $defer
 $var[rnd;$random[0;2]]
 $if[$var[rnd]==0]
-$title[Partida PvP - 3 en Raya]
-$description[Jugador ❌: <@$var[retador]>
-Jugador ⭕: <@$var[retado]>
+$title[PvP Game - Tic-Tac-Toe]
+$description[Player ❌: <@$var[retador]>
+Player ⭕: <@$var[retado]>
 
-Turno de: ❌ (<@$var[retador]>)]
+Turn: ❌ (<@$var[retador]>)]
 $color[#5865F2]
 $footer[$var[retador]|$var[retado]|-|e.e.e.e.e.e.e.e.e|n|n]
 $else
-$title[Partida PvP - 3 en Raya]
-$description[Jugador ❌: <@$var[retado]>
-Jugador ⭕: <@$var[retador]>
+$title[PvP Game - Tic-Tac-Toe]
+$description[Player ❌: <@$var[retado]>
+Player ⭕: <@$var[retador]>
 
-Turno de: ❌ (<@$var[retado]>)]
+Turn: ❌ (<@$var[retado]>)]
 $color[#5865F2]
 $footer[$var[retado]|$var[retador]|-|e.e.e.e.e.e.e.e.e|n|n]
 $endif
@@ -117,7 +117,7 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $stop
 $endif
 
@@ -128,12 +128,12 @@ $var[retado;$splitText[3]]
 $if[$authorID!=$var[retado]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo <@$var[retado]> puede rechazar este reto!]
+$description[❌ ❌ Only <@$var[retado]> can reject this challenge!]
 $stop
 $endif
 $defer
-$title[Reto rechazado]
-$description[❌ <@$var[retado]> ha rechazado el reto de <@$var[retador]>.]
+$title[Challenge rejected]
+$description[❌ <@$var[retado]> has rejected <@$var[retador]>.]
 $color[#ED4245]
 $removeAllComponents
 $stop
@@ -146,7 +146,7 @@ $var[state;$getEmbedData[$channelID;$var[mid];1;footer]]
 $if[$var[state]==]
 $ephemeral
 $removeButtons
-$description[❌ No se pudo cargar el estado de la partida.]
+$description[❌ Could not load the game state.]
 $stop
 $endif
 
@@ -170,10 +170,10 @@ $var[c7;$splitText[8]]
 $var[c8;$splitText[9]]
 
 $var[mode;pvp]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $var[mode;ia]
 $endif
-$if[$var[pO]==IA]
+$if[$var[pO]==AI]
 $var[mode;ia]
 $endif
 
@@ -257,48 +257,48 @@ $endif
 $if[$var[gameEnded]==yes]
 
 $if[$var[mode]==ia]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $if[$authorID!=$var[pO]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo el jugador puede reiniciar!]
+$description[❌ Only the player can restart!]
 $stop
 $endif
 $else
 $if[$authorID!=$var[pX]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo el jugador puede reiniciar!]
+$description[❌ Only the player can restart!]
 $stop
 $endif
 $endif
 $defer
 
-$var[diffName;Facil]
+$var[diffName;Easy]
 $var[diffColor;#57F287]
 $if[$var[dif]==n]
 $var[diffName;Normal]
 $var[diffColor;#5865F2]
 $endif
 $if[$var[dif]==h]
-$var[diffName;Dificil]
+$var[diffName;Hard]
 $var[diffColor;#FEE75C]
 $endif
 $if[$var[dif]==i]
-$var[diffName;Imposible]
+$var[diffName;Impossible]
 $var[diffColor;#ED4245]
 $endif
-$title[Partida vs IA - Nivel: $var[diffName]]
+$title[Game vs AI - Level: $var[diffName]]
 $var[rnd2;$random[0;2]]
 $if[$var[rnd2]==0]
-$description[Jugador: <@$authorID> (❌)
-IA: 🤖 (⭕)
+$description[Player: <@$authorID> (❌)
+AI: 🤖 (⭕)
 
-🔄 ¡Nueva partida iniciada!
+🔄 New game started!
 
-Turno de: ❌ (¡Tu empiezas!)]
+Turn: ❌ (You start!)]
 $color[$var[diffColor]]
-$footer[$authorID|IA|$var[dif]|e.e.e.e.e.e.e.e.e|n|n]
+$footer[$authorID|AI|$var[dif]|e.e.e.e.e.e.e.e.e|n|n]
 $removeAllComponents
 $addButton[no;p0;​;secondary;no;⬜]
 $addButton[no;p1;​;secondary;no;⬜]
@@ -309,16 +309,16 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $else
-$description[IA: 🤖 (❌)
-Jugador: <@$authorID> (⭕)
+$description[AI: 🤖 (❌)
+Player: <@$authorID> (⭕)
 
-🔄 ¡Nueva partida iniciada!
+🔄 New game started!
 
-Turno de: ⭕ (¡La IA empieza!)]
+Turn: ⭕ (AI starts!)]
 $color[$var[diffColor]]
-$footer[IA|$authorID|$var[dif]|e.e.e.e.X.e.e.e.e|n|n]
+$footer[AI|$authorID|$var[dif]|e.e.e.e.X.e.e.e.e|n|n]
 $removeAllComponents
 $addButton[no;p0;​;secondary;no;⬜]
 $addButton[no;p1;​;secondary;no;⬜]
@@ -329,7 +329,7 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $endif
 $stop
 $endif
@@ -338,7 +338,7 @@ $if[$authorID!=$var[pX]]
 $if[$authorID!=$var[pO]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo los jugadores de esta partida pueden usar la revancha!]
+$description[❌ Only the players of this game can request a rematch!]
 $stop
 $endif
 $endif
@@ -347,7 +347,7 @@ $if[$authorID==$var[pX]]
 $if[$var[revX]==y]
 $ephemeral
 $removeButtons
-$description[❌ ¡Ya has votado por la revancha!]
+$description[❌ You have already voted for a rematch!]
 $stop
 $endif
 $var[revX;y]
@@ -357,7 +357,7 @@ $if[$authorID==$var[pO]]
 $if[$var[revO]==y]
 $ephemeral
 $removeButtons
-$description[❌ ¡Ya has votado por la revancha!]
+$description[❌ You have already voted for a rematch!]
 $stop
 $endif
 $var[revO;y]
@@ -369,14 +369,14 @@ $if[$var[revO]==y]$var[votos;$sum[$var[votos];1]]$endif
 
 $if[$var[votos]<2]
 $defer
-$editButton[act;🔄 Revancha ($var[votos]/2);success;no;🔄]
-$title[Partida PvP - Revancha]
-$description[Jugador ❌: <@$var[pX]>
-Jugador ⭕: <@$var[pO]>
+$editButton[act;🔄 Rematch ($var[votos]/2);success;no;🔄]
+$title[PvP Game - Rematch]
+$description[Player ❌: <@$var[pX]>
+Player ⭕: <@$var[pO]>
 
-🔄 Revancha solicitada: **$var[votos]/2**
+🔄 Rematch requested: **$var[votos]/2**
 
-Ambos jugadores deben presionar para reiniciar.]
+Both players must press to restart.]
 $color[#FEE75C]
 $footer[$var[pX]|$var[pO]|-|$var[c0].$var[c1].$var[c2].$var[c3].$var[c4].$var[c5].$var[c6].$var[c7].$var[c8]|$var[revX]|$var[revO]]
 $stop
@@ -386,23 +386,23 @@ $defer
 
 $var[rnd3;$random[0;2]]
 $if[$var[rnd3]==0]
-$title[Partida PvP - 3 en Raya]
-$description[Jugador ❌: <@$var[pX]>
-Jugador ⭕: <@$var[pO]>
+$title[PvP Game - Tic-Tac-Toe]
+$description[Player ❌: <@$var[pX]>
+Player ⭕: <@$var[pO]>
 
-🔄 ¡Revancha iniciada!
+🔄 Rematch started!
 
-Turno de: ❌ (<@$var[pX]>)]
+Turn: ❌ (<@$var[pX]>)]
 $color[#5865F2]
 $footer[$var[pX]|$var[pO]|-|e.e.e.e.e.e.e.e.e|n|n]
 $else
-$title[Partida PvP - 3 en Raya]
-$description[Jugador ❌: <@$var[pO]>
-Jugador ⭕: <@$var[pX]>
+$title[PvP Game - Tic-Tac-Toe]
+$description[Player ❌: <@$var[pO]>
+Player ⭕: <@$var[pX]>
 
-🔄 ¡Revancha iniciada!
+🔄 Rematch started!
 
-Turno de: ❌ (<@$var[pO]>)]
+Turn: ❌ (<@$var[pO]>)]
 $color[#5865F2]
 $footer[$var[pO]|$var[pX]|-|e.e.e.e.e.e.e.e.e|n|n]
 $endif
@@ -416,23 +416,23 @@ $addButton[no;p5;​;secondary;no;⬜]
 $addButton[yes;p6;​;secondary;no;⬜]
 $addButton[no;p7;​;secondary;no;⬜]
 $addButton[no;p8;​;secondary;no;⬜]
-$addButton[yes;act;🏳️ Rendirse;danger;no;🏳️]
+$addButton[yes;act;🏳️ Forfeit;danger;no;🏳️]
 $stop
 $endif
 
 $if[$var[mode]==ia]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $if[$authorID!=$var[pO]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo el jugador puede rendirse!]
+$description[❌ Only the player can forfeit!]
 $stop
 $endif
 $else
 $if[$authorID!=$var[pX]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Solo el jugador puede rendirse!]
+$description[❌ Only the player can forfeit!]
 $stop
 $endif
 $endif
@@ -444,7 +444,7 @@ $endif
 $if[$authorID!=$var[allowed]]
 $ephemeral
 $removeButtons
-$description[❌ ¡No es tu turno, no puedes rendirte!]
+$description[❌ It's not your turn, you can't forfeit!]
 $stop
 $endif
 $endif
@@ -455,17 +455,17 @@ $var[gameOver;true]
 $var[winLine;-1]
 
 $if[$var[mode]==ia]
-$title[Partida vs IA - Rendicion]
-$if[$var[pX]==IA]
-$description[IA: 🤖 (❌)
-Jugador: <@$var[pO]> (⭕)
+$title[Game vs AI - Forfeit]
+$if[$var[pX]==AI]
+$description[AI: 🤖 (❌)
+Player: <@$var[pO]> (⭕)
 
-🏳️ <@$var[pO]> se ha rendido. ¡Gano la IA!]
+🏳️ <@$var[pO]> has forfeited. AI wins!]
 $else
-$description[Jugador: <@$var[pX]> (❌)
-IA: 🤖 (⭕)
+$description[Player: <@$var[pX]> (❌)
+AI: 🤖 (⭕)
 
-🏳️ <@$var[pX]> se ha rendido. ¡Gano la IA!]
+🏳️ <@$var[pX]> has forfeited. AI wins!]
 $endif
 $color[#ED4245]
 $else
@@ -475,11 +475,11 @@ $if[$var[turn]==X]
 $var[winner;$var[pO]]
 $var[winnerSym;O]
 $endif
-$title[Partida PvP - Rendicion]
-$description[Jugador ❌: <@$var[pX]>
-Jugador ⭕: <@$var[pO]>
+$title[PvP Game - Forfeit]
+$description[Player ❌: <@$var[pX]>
+Player ⭕: <@$var[pO]>
 
-🏳️ <@$authorID> se ha rendido. ¡Gano $var[winnerSym] <@$var[winner]>!]
+🏳️ <@$authorID> has forfeited. $var[winnerSym] <@$var[winner]> wins!]
 $color[#57F287]
 $endif
 
@@ -507,9 +507,9 @@ $addButton[yes;p6;​;secondary;yes;⬜]
 $addButton[no;p7;​;secondary;yes;⬜]
 $addButton[no;p8;​;secondary;yes;⬜]
 $if[$var[mode]==ia]
-$addButton[yes;act;🔄 Reiniciar;success;no;🔄]
+$addButton[yes;act;🔄 Restart;success;no;🔄]
 $else
-$addButton[yes;act;🔄 Revancha (0/2);success;no;🔄]
+$addButton[yes;act;🔄 Rematch (0/2);success;no;🔄]
 $endif
 $stop
 $endif
@@ -521,7 +521,7 @@ $endif
 $catch
 $ephemeral
 $removeButtons
-$description[❌ Ocurrio un error: $error[message]]
+$description[❌ An error occurred: $error[message]]
 $color[#FF0000]
 $endtry
 ```

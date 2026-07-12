@@ -1,10 +1,10 @@
-# Disparador
+# Trigger
 
 ```
 $onInteraction
 ```
 
-## Codigo
+## Code
 
 ```
 $nomention
@@ -22,7 +22,7 @@ $var[state;$getEmbedData[$channelID;$var[mid];1;footer]]
 $if[$var[state]==]
 $ephemeral
 $removeButtons
-$description[❌ No se pudo cargar el estado de la partida.]
+$description[❌ Could not load the game state.]
 $stop
 $endif
 
@@ -46,10 +46,10 @@ $var[c7;$splitText[8]]
 $var[c8;$splitText[9]]
 
 $var[mode;pvp]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $var[mode;ia]
 $endif
-$if[$var[pO]==IA]
+$if[$var[pO]==AI]
 $var[mode;ia]
 $endif
 
@@ -57,7 +57,7 @@ $var[iaSym;O]
 $var[userSym;X]
 $var[userEmoji;❌]
 $var[iaEmoji;⭕]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $var[iaSym;X]
 $var[userSym;O]
 $var[userEmoji;⭕]
@@ -144,35 +144,35 @@ $endif
 $if[$var[gameEnded]==yes]
 $ephemeral
 $removeButtons
-$description[❌ ¡Esta partida ya termino!]
+$description[❌ This game has already ended!]
 $stop
 $endif
 
 $if[$var[mode]==ia]
-$if[$var[pX]==IA]
+$if[$var[pX]==AI]
 $if[$authorID!=$var[pO]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Este tablero no es tuyo!]
+$description[❌ This board is not yours!]
 $stop
 $endif
 $if[$var[turn]==X]
 $ephemeral
 $removeButtons
-$description[❌ ¡Espera a que la IA juegue!]
+$description[❌ Wait for the AI to play!]
 $stop
 $endif
 $else
 $if[$authorID!=$var[pX]]
 $ephemeral
 $removeButtons
-$description[❌ ¡Este tablero no es tuyo!]
+$description[❌ This board is not yours!]
 $stop
 $endif
 $if[$var[turn]==O]
 $ephemeral
 $removeButtons
-$description[❌ ¡Espera a que la IA juegue!]
+$description[❌ Wait for the AI to play!]
 $stop
 $endif
 $endif
@@ -184,7 +184,7 @@ $endif
 $if[$authorID!=$var[allowed]]
 $ephemeral
 $removeButtons
-$description[❌ ¡No es tu turno!]
+$description[❌ It's not your turn!]
 $stop
 $endif
 $endif
@@ -202,7 +202,7 @@ $if[$var[pos]==8]$var[clicked;$var[c8]]$endif
 $if[$var[clicked]!=e]
 $ephemeral
 $removeButtons
-$description[❌ ¡Esa casilla ya esta ocupada!]
+$description[❌ That cell is already occupied!]
 $stop
 $endif
 
@@ -1640,19 +1640,19 @@ $endif
 
 $var[statusText;]
 $if[$var[win]==X]
-$if[$var[pX]==IA]
-$var[statusText;🤖 ¡Gano la IA! (❌)]
+$if[$var[pX]==AI]
+$var[statusText;🤖 AI wins! (❌)]
 $else
-$var[statusText;🎉 ¡Gano ❌ <@$var[pX]>!]
+$var[statusText;🎉 ❌ <@$var[pX]> wins!]
 $endif
 $elseif[$var[win]==O]
-$if[$var[pO]==IA]
-$var[statusText;🤖 ¡Gano la IA! (⭕)]
+$if[$var[pO]==AI]
+$var[statusText;🤖 AI wins! (⭕)]
 $else
-$var[statusText;🎉 ¡Gano ⭕ <@$var[pO]>!]
+$var[statusText;🎉 ⭕ <@$var[pO]> wins!]
 $endif
 $elseif[$var[gameOver]==true]
-$var[statusText;🤝 ¡Empate!]
+$var[statusText;🤝 It's a draw!]
 $else
 $var[nextTurn;X]
 $if[$modulo[$var[newFilled];2]==1]
@@ -1660,42 +1660,42 @@ $var[nextTurn;O]
 $endif
 $if[$var[mode]==ia]
 $if[$var[nextTurn]==$var[userSym]]
-$var[statusText;Turno de: $var[userEmoji] (tu turno)]
+$var[statusText;Turn: $var[userEmoji] (your turn)]
 $else
-$var[statusText;Turno de: $var[iaEmoji] (IA)]
+$var[statusText;Turn: $var[iaEmoji] (AI)]
 $endif
 $else
 $if[$var[nextTurn]==X]
-$var[statusText;Turno de: ❌ (<@$var[pX]>)]
+$var[statusText;Turn: ❌ (<@$var[pX]>)]
 $else
-$var[statusText;Turno de: ⭕ (<@$var[pO]>)]
+$var[statusText;Turn: ⭕ (<@$var[pO]>)]
 $endif
 $endif
 $endif
 
 $if[$var[mode]==ia]
-$title[Partida vs IA]
-$if[$var[pX]==IA]
-$description[IA: 🤖 (❌)
-Jugador: <@$var[pO]> (⭕)
+$title[Game vs AI]
+$if[$var[pX]==AI]
+$description[AI: 🤖 (❌)
+Player: <@$var[pO]> (⭕)
 
-Movimientos: $var[newFilled]/9
+Moves: $var[newFilled]/9
 
 $var[statusText]]
 $else
-$description[Jugador: <@$var[pX]> (❌)
-IA: 🤖 (⭕)
+$description[Player: <@$var[pX]> (❌)
+AI: 🤖 (⭕)
 
-Movimientos: $var[newFilled]/9
+Moves: $var[newFilled]/9
 
 $var[statusText]]
 $endif
 $else
-$title[Partida PvP - 3 en Raya]
-$description[Jugador ❌: <@$var[pX]>
-Jugador ⭕: <@$var[pO]>
+$title[PvP Game - Tic-Tac-Toe]
+$description[Player ❌: <@$var[pX]>
+Player ⭕: <@$var[pO]>
 
-Movimientos: $var[newFilled]/9
+Moves: $var[newFilled]/9
 
 $var[statusText]]
 $endif
@@ -1924,18 +1924,18 @@ $editButton[p8;​;$var[s8];$var[d8];$var[e8]]
 
 $if[$var[gameOver]==true]
 $if[$var[mode]==ia]
-$editButton[act;🔄 Reiniciar;success;no;🔄]
+$editButton[act;🔄 Restart;success;no;🔄]
 $else
-$editButton[act;🔄 Revancha (0/2);success;no;🔄]
+$editButton[act;🔄 Rematch (0/2);success;no;🔄]
 $endif
 $else
-$editButton[act;🏳️ Rendirse;danger;no;🏳️]
+$editButton[act;🏳️ Forfeit;danger;no;🏳️]
 $endif
 
 $catch
 $ephemeral
 $removeButtons
-$description[❌ Ocurrio un error: $error[message]]
+$description[❌ An error occurred: $error[message]]
 $color[#FF0000]
 $endtry
 ```
