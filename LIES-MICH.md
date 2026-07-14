@@ -1,148 +1,113 @@
-# Tic-Tac-Toe fur BDFD - Definitive Version
+# Tic-Tac-Toe für BDFD
 
-Ein vollstandiges Tic-Tac-Toe-Spiel fur **Bot Designer For Discord** (BDFD) mit **PvP**-Modus und **Gegen KI**-Modus (4 Schwierigkeitsstufen).
+Ein Tic-Tac-Toe-Spiel für Bot Designer For Discord (BDFD) mit PvP-Modus und einem KI-Modus mit 4 Schwierigkeitsstufen. Die Schwierigkeit Unmöglich verwendet Minimax mit einer vorausberechneten Nachschlagetabelle für alle 19.683 Spielfeldzustände, sodass es nie verliert.
 
-Die Schwierigkeit **Unmoglich** verwendet einen **echten Minimax-Algorithmus** mit einer vorausberechneten Nachschlagetabelle von 19,683 Zustaenden, was ihn mathematisch perfekt macht — er verliert nie.
+## Was es enthält
 
----
-
-## Funktionen
-
-- **4 KI-Schwierigkeitsstufen**: Einfach, Normal, Schwer, Unmoglich (Minimax)
-- **PvP-Modus**: Fordere einen anderen Spieler mit Annehmen/Ablehnen-Buttons heraus
-- **Zufallige X/O-Zuweisung**: Manchmal startest du, manchmal startet die KI
-- **Rematch-System**: Beide Spieler mussen zum Neustart abstimmen (PvP)
-- **Aufgeben/Neustart**: Gib jederzeit auf, starte nach Spielende neu (vs KI)
-- **Hervorhebung der Gewinnlinie**: Die 3 Gewinnzellen werden grun
-- **Zug-Zahler**: Zeigt X/9 gemachte Zuge an
-- **Keine Server-Variablen notig**: Spielstatus wird im Embed-Footer gespeichert
-- **Unbegrenzte gleichzeitige Spiele**: Jedes Spielfeld ist unabhangig
-
----
+- 4 KI-Schwierigkeiten: Einfach, Normal, Schwer, Unmöglich (Minimax)
+- PvP-Modus mit Annehmen/Ablehnen-Buttons für Herausforderungen
+- Zufällige X/O-Zuweisung in jeder Partie
+- Revanche-System: Beide Spieler müssen zum Neustart abstimmen
+- Aufgeben und Neustart im KI-Modus
+- Gewinnlinie wird grün hervorgehoben
+- Zug-Zähler (X/9)
+- Keine Server-Variablen nötig, Spielstatus lebt im Embed-Footer
+- Unbegrenzte gleichzeitige Spiele, jedes Spielfeld ist unabhängig
 
 ## Einrichtung
 
-### 1. Befehle erstellen
+Du benötigst 3 Befehle in deinem Bot:
 
-Du musst **3 Befehle** in deinem BDFD-Bot erstellen:
-
-| # | Ausloser | Sprache | Datei | Beschreibung |
-|---|---------|--------|-------|-------------|
+| # | Auslöser | Sprache | Datei | Was es macht |
+|---|---------|----------|------|---------------|
 | 1 | `!ttt` | BDScript 2 | `Tic-Tac-Toe_BDFD.md` | Hauptbefehl (KI-Menü oder PvP-Herausforderung) |
-| 2 | `$onInteraction` | BDScript 2 | `Callback 1 ($onInteraction).md` | Verwaltet Menu, Herausforderungen, Aufgeben, Rematch, Neustart |
-| 3 | `$onInteraction` | BDScript 2 | `Callback 2 ($onInteraction).md` | Verwaltet Zellklicks + Minimax-KI |
+| 2 | `$onInteraction` | BDScript 2 | `Callback 1 ($onInteraction).md` | Menü, Herausforderungen, Aufgeben, Revanche, Neustart |
+| 3 | `$onInteraction` | BDScript 2 | `Callback 2 ($onInteraction).md` | Zellklicks + Minimax-KI |
 
-### 2. Warum zwei `$onInteraction`-Callbacks?
+**Warum zwei `$onInteraction`-Callbacks?** BDFD erlaubt mehrere, und führt alle bei jeder Interaktion aus. Die Minimax-Nachschlagetabelle ist 19.683 Zeichen lang und passt nicht zusammen mit dem Rest des Codes in einen einzelnen Callback, daher wurde sie in zwei aufgeteilt: der erste behandelt das Schwierigkeitsmenü, Annehmen/Ablehnen und Aufgeben/Revanche/Neustart; der zweite behandelt Zellklicks und die Minimax-Tabelle. Jeder verwendet `$stop`, damit sie sich nicht gegenseitig stören.
 
-BDFD unterstutzt mehrere `$onInteraction`-Callbacks — beide werden bei jeder Interaktion ausgefuhrt. Die Minimax-Nachschlagetabelle (19,683 Zeichen) ist zu gross fur einen einzelnen Callback, daher wird der Code aufgeteilt:
-
-- **Callback 1**: Verwaltet Routen A (Schwierigkeitsmenu), B (Herausforderung annehmen), C (Herausforderung ablehnen), E (Aufgeben/Rematch/Neustart)
-- **Callback 2**: Verwaltet Route D (Zelle spielen) + die Minimax-Nachschlagetabelle
-
-Jeder Callback verwendet `$stop`, um sich nicht mit dem anderen zu storen.
-
-### 3. Bot-Berechtigungen
-
-Der Bot benotigt diese Berechtigungen:
-- Nachrichten senden
-- Nachrichten verwalten (um das Spielfeld zu bearbeiten)
-- Komponenten verwenden (Buttons / Auswahlmenus)
-
----
+Bot-Berechtigungen benötigt: Nachrichten senden, Nachrichten verwalten (um das Spielfeld zu bearbeiten) und Komponenten verwenden (Buttons/Auswahlmenüs).
 
 ## Wie es funktioniert
 
-### Spielspeicherung
+### Spielstatus
 
-Der Spielstatus wird im **Embed-Footer** gespeichert (nicht in Server-Variablen), im Format:
+Gespeichert im Embed-Footer in diesem Format:
 
 ```
-SpielerX_ID|SpielerO_ID|Schwierigkeit|Zelle0.Zelle1.Zelle2.Zelle3.Zelle4.Zelle5.Zelle6.Zelle7.Zelle8|RematchStimmeX|RematchStimmeO
+SpielerX_ID|SpielerO_ID|Schwierigkeit|Zelle0.Zelle1.Zelle2.Zelle3.Zelle4.Zelle5.Zelle6.Zelle7.Zelle8|RevancheStimmeX|RevancheStimmeO
 ```
 
-- `SpielerX_ID` / `SpielerO_ID`: Discord-Benutzer-IDs (oder `KI` fur KI-Modus)
-- `Schwierigkeit`: `e` (Einfach), `n` (Normal), `h` (Schwer), `i` (Unmoglich)
-- `Zelle0`-`Zelle8`: `e` (leer), `X` oder `O`
-- `RematchStimmeX` / `RematchStimmeO`: `y` (abgestimmt) oder `n` (nicht abgestimmt)
+- `SpielerX_ID` / `SpielerO_ID`: Discord-Benutzer-ID (oder `KI`)
+- `Schwierigkeit`: `e` Einfach, `n` Normal, `h` Schwer, `i` Unmöglich
+- `Zelle0`–`Zelle8`: `e` leer, `X` oder `O`
+- `RevancheStimmeX` / `RevancheStimmeO`: `y` oder `n`
 
-Dadurch ist jedes Spiel unabhangig — unbegrenzte gleichzeitige Spiele im selben Kanal.
+Da es nicht auf Server-Variablen angewiesen ist, ist jedes Spiel in sich geschlossen und man kann mehrere gleichzeitig im selben Kanal ausführen.
 
-### KI-Schwierigkeitsstufen
+### KI-Schwierigkeiten
 
 | Schwierigkeit | Strategie |
-|--------------|-----------|
-| **Einfach** | Zufallige Zuge |
-| **Normal** | Gewinnen wenn moglich, blockieren wenn bedroht, sonst zufallig |
-| **Schwer** | Gewinnen, blockieren, Gabeln erstellen, gegnerische Gabeln blockieren, Zentrum, gegenuberliegende Ecke, Ecke, Seite |
-| **Unmoglich** | **Echtes Minimax** — vorausberechneter optimaler Zug fur alle 19,683 Zustande. Verliert nie. |
+|-----------|----------|
+| Einfach | Zufällige Züge |
+| Normal | Gewinnt wenn möglich, blockiert Bedrohung, sonst zufällig |
+| Schwer | Gewinnen, blockieren, Gabeln aufbauen, gegnerische Gabeln blockieren, Zentrum, gegenüberliegende Ecke, Ecke, Seite |
+| Unmöglich | Minimax mit vorausberechneter Tabelle für alle 19.683 Zustände. Verliert nie. |
 
-### Minimax-Algorithmus
+### Der Minimax-Algorithmus
 
-Die Unmoglich-KI verwendet eine **in Python vorausberechnete Minimax-Tabelle**:
+Für die Schwierigkeit Unmöglich:
 
-1. **Python-Solver**: Fuhrt einen erschopfenden Minimax uber alle 19,683 moglichen Spielfeldzustande (3^9) aus. Fur jeden gultigen Zustand, in dem die KI am Zug ist, berechnet es den optimalen Zug unter der Annahme perfekten gegnerischen Spiels.
+1. `minimax_solver.py` führt einen erschöpfenden Minimax über alle 3⁹ = 19.683 möglichen Spielfeldzustände aus und berechnet für jeden, in dem die KI am Zug ist, den optimalen Zug unter der Annahme perfekten gegnerischen Spiels.
+2. Das wird als 19.683-Zeichen-Tabelle gespeichert: Jede Position entspricht einem Zustand (indiziert durch einen Basis-3-Hash), und das Zeichen dort ist der optimale Zug (0-8) oder `-` wenn der Zustand ungültig ist.
+3. In BDFD: Zellen werden Zahlen zugeordnet (`e=0`, `iaSym=1`, `userSym=2`), der Hash wird berechnet als `hash = n0*1 + n1*3 + n2*9 + ... + n8*6561`, nachgeschlagen mit `$splitText[$sum[$var[hash];1]]`, und dieser Zug wird gespielt.
 
-2. **Nachschlagetabelle** (19,683 Zeichen): Jede Position in der Zeichenkette reprasentiert einen Spielfeldzustand (indiziert durch Basis-3-Hash). Das Zeichen an dieser Position ist der optimale Zug (0-8) oder `-` wenn der Zustand ungultig ist.
+### Zufällige X/O-Zuweisung
 
-3. **In BDFD**, fur die Schwierigkeit Unmoglich:
-   - Ordnet Zellen Zahlen zu: `e=0`, `iaSym=1`, `userSym=2`
-   - Berechnet den Hash: `hash = n0*1 + n1*3 + n2*9 + ... + n8*6561`
-   - Schlagt in der Tabelle nach: `$splitText[$sum[$var[hash];1]]`
-   - Spielt diesen optimalen Zug
+Beim Start einer Partie (neu, Neustart oder Revanche) entscheidet `$random[0;2]` wer X ist: die Hälfte der Zeit startest du, die Hälfte startet die KI (und spielt automatisch das Zentrum). Die KI ist mit `$var[iaSym]` und `$var[userSym]` parametrisiert, sodass sie gleich funktioniert egal ob X oder O.
 
-### Zufallige X/O-Zuweisung
+### Revanche (PvP)
 
-Beim Start eines Spiels (neu, Neustart oder Rematch) bestimmt eine Zufallszahl (`$random[0;2]`), wer X und wer O ist:
+Wenn eine PvP-Partie endet, ändert sich der Button zu "Revanche (0/2)". Jeder Spieler stimmt durch Drücken ab, und wenn es 2/2 erreicht wird das Spielfeld mit einer neuen zufälligen X/O-Zuweisung zurückgesetzt. Nur die beiden ursprünglichen Spieler können abstimmen; alle anderen erhalten einen Fehler.
 
-- **50% Chance**: Benutzer ist X (startet zuerst)
-- **50% Chance**: KI ist X (startet zuerst, spielt automatisch Zentrum)
+## Repo-Struktur
 
-Die KI ist vollstandig parametrisiert mit `$var[iaSym]` und `$var[userSym]`, sodass sie korrekt funktioniert unabhangig davon, ob sie X oder O ist.
-
-### Rematch-System (PvP)
-
-Nach Ende eines PvP-Spiels:
-1. Der Button wechselt zu "Rematch (0/2)"
-2. Jeder Spielerdruckt zum Abstimmen — Button aktualisiert zu "Rematch (1/2)"
-3. Wenn beide abstimmen (2/2), wird das Spielfeld mit neuer zufalliger X/O-Zuweisung zuruckgesetzt
-4. Nur die zwei Spieler konnen abstimmen; andere erhalten einen Fehler
-
----
+```
+Repository/
+│
+├── README.md                          (Englische Version)
+├── LIES-MICH.md                       (Deutsche Version)
+│
+├── English/
+│   ├── Tic-Tac-Toe_Code.md
+│   ├── Callback 1 ($onInteraction).md
+│   └── Callback 2 ($onInteraction).md
+│
+└── Deutsch/
+    ├── Tic-Tac-Toe_BDFD.md
+    ├── Callback 1 ($onInteraction).md
+    └── Callback 2 ($onInteraction).md
+```
 
 ## Verwendung
 
-### Gegen KI spielen
+Gegen KI: Tippe `!ttt` und wähle eine Schwierigkeit aus dem Dropdown. Dir wird zufällig X oder O zugewiesen.
 
-```
-!ttt
-```
+Gegen einen anderen Spieler: `!ttt @benutzer`. Der herausgeforderte Spieler nimmt mit dem Button an, und X/O wird ebenfalls zufällig zugewiesen.
 
-Wahle eine Schwierigkeit aus dem Dropdown-Menu. Dir wird zufallig X oder O zugewiesen.
+Während des Spiels: Klicke eine leere Zelle (⬜) um zu spielen, "Aufgeben" um aufzugeben, und wenn es vorbei ist "Neustart" (vs KI) oder "Revanche" (PvP) um nochmal zu spielen.
 
-### Gegen einen anderen Spieler spielen
+## Technische Details
 
-```
-!ttt @benutzer
-```
-
-Der herausgeforderte Spieler muss "Annehmen" drucken um zu starten. X/O wird zufallig zugewiesen.
-
-### Wahrend des Spiels
-
-- Klicke auf ein leeres Feld (⬜) um dein Zeichen zu setzen
-- Drucke "Aufgeben" um aufzugeben
-- Nach Spielende drucke "Neustart" (vs KI) oder "Rematch" (PvP) um wieder zu spielen
-
----
+- Sprache: BDScript 2 (verwendet `$eval`, `$var`, `$try`, `$async`)
+- Jeder Callback bleibt unter dem 65.500-Zeichen-Limit von BDFD
+- Keine externen Abhängigkeiten, alles lebt in den 3 Befehlen
+- Keine Server-Variablen, Status lebt in den Embed-Footern
 
 ## Credits
 
-Erstellt vom **Nexusify team**.
-
-Du darfst diesen Code frei verwenden, aber bitte entferne nicht die Credits. Es hat 3 Monate Arbeit gekostet — respektiere die Muehe.
-
----
+Erstellt vom Nexusify Team. Du darfst den Code frei verwenden, behalte nur die Credits.
 
 ## Lizenz
 
-Freie Nutzung mit Namensnennung. Beanspruche den Code nicht als deinen.
+Freie Nutzung mit Credits. Gib ihn nicht als deinen aus.

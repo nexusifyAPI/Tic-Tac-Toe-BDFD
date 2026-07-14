@@ -1,148 +1,113 @@
-# Tris per BDFD - Versione Definitiva
+# Tris per BDFD
 
-Un gioco completo di Tris per **Bot Designer For Discord** (BDFD) con modalita **PvP** e modalita **vs IA** (4 difficolta).
+Un gioco di Tris per Bot Designer For Discord (BDFD), con modalità PvP e modalità contro IA con 4 difficoltà. La difficoltà Impossibile usa minimax con una tabella precomputata di tutti i 19.683 stati del tabellone, quindi non perde mai.
 
-La difficolta **Impossibile** usa un **algoritmo minimax reale** con una tabella precomputata di 19,683 stati, rendendolo matematicamente perfetto — non perde mai.
+## Cosa include
 
----
-
-## Caratteristiche
-
-- **4 difficolta IA**: Facile, Normale, Difficile, Impossibile (minimax)
-- **Modalita PvP**: Sfida un altro giocatore con pulsanti accetta/rifiuta
-- **Assegnazione casuale X/O**: A volte inizi tu, a volte inizia l'IA
-- **Sistema di rivincita**: Entrambi i giocatori devono votare per riavviare (PvP)
-- **Arrenditi/Riavvia**: Arrenditi in qualsiasi momento, riavvia dopo la fine (vs IA)
-- **Evidenziazione linea vincente**: Le 3 celle vincenti diventano verdi
-- **Contatore di mosse**: Mostra X/9 mosse effettuate
-- **Nessuna variabile del server necessaria**: Lo stato del gioco e memorizzato nel footer dell'embed
-- **Partite simultanee illimitate**: Ogni tabellone e indipendente
-
----
+- 4 difficoltà IA: Facile, Normale, Difficile, Impossibile (minimax)
+- Modalità PvP con pulsanti accetta/rifiuta per le sfide
+- Assegnazione casuale di X/O ad ogni partita
+- Sistema di rivincita: entrambi i giocatori devono votare per riavviare
+- Arrendersi e riavviare in modalità IA
+- La linea vincente viene evidenziata in verde
+- Contatore di mosse (X/9)
+- Non servono variabili del server, lo stato del gioco vive nel footer dell'embed
+- Partite simultanee illimitate, ogni tabellone è indipendente
 
 ## Configurazione
 
-### 1. Creare i comandi
+Ti servono 3 comandi nel tuo bot:
 
-Devi creare **3 comandi** nel tuo bot BDFD:
-
-| # | Attivatore | Linguaggio | File | Descrizione |
-|---|-----------|-----------|------|-------------|
+| # | Attivatore | Linguaggio | File | Cosa fa |
+|---|-----------|----------|------|---------|
 | 1 | `!ttt` | BDScript 2 | `Tris_BDFD.md` | Comando principale (menu IA o sfida PvP) |
-| 2 | `$onInteraction` | BDScript 2 | `Callback 1 ($onInteraction).md` | Gestisce menu, sfide, resa, rivincita, riavvio |
-| 3 | `$onInteraction` | BDScript 2 | `Callback 2 ($onInteraction).md` | Gestisce mosse + IA minimax |
+| 2 | `$onInteraction` | BDScript 2 | `Callback 1 ($onInteraction).md` | Menu, sfide, resa, rivincita, riavvio |
+| 3 | `$onInteraction` | BDScript 2 | `Callback 2 ($onInteraction).md` | Mosse + IA minimax |
 
-### 2. Perche due callback `$onInteraction`?
+**Perché due callback `$onInteraction`?** BDFD permette di averne più di uno, e li esegue tutti ad ogni interazione. La tabella minimax occupa 19.683 caratteri e non entra insieme al resto del codice in un singolo callback, quindi è divisa in due: il primo gestisce il menu di difficoltà, accetta/rifiuta e resa/rivincita/riavvio; il secondo gestisce i clic sulle celle e la tabella minimax. Ognuno usa `$stop` per non interferire con l'altro.
 
-BDFD supporta multiple callback `$onInteraction` — entrambe vengono eseguite ad ogni interazione. La tabella minimax (19,683 caratteri) e troppo grande per stare in una singola callback, quindi il codice e diviso:
-
-- **Callback 1**: Gestisce le route A (menu difficolta), B (accetta sfida), C (rifiuta sfida), E (resa/rivincita/riavvio)
-- **Callback 2**: Gestisce la route D (gioca cella) + la tabella minimax
-
-Ogni callback usa `$stop` per non interferire con l'altra.
-
-### 3. Permessi del bot
-
-Il bot ha bisogno di questi permessi:
-- Invia messaggi
-- Gestisci messaggi (per modificare il tabellone)
-- Usa componenti (pulsanti / menu a selezione)
-
----
+Permessi che servono al bot: inviare messaggi, gestire messaggi (per modificare il tabellone) e usare componenti (pulsanti/menu a selezione).
 
 ## Come funziona
 
-### Archiviazione dello stato
+### Stato del gioco
 
-Lo stato del gioco e memorizzato nel **footer dell'embed** (non in variabili del server), usando il formato:
+Salvato nel footer dell'embed, con questo formato:
 
 ```
-ID_giocatoreX|ID_giocatoreO|difficolta|cella0.cella1.cella2.cella3.cella4.cella5.cella6.cella7.cella8|votoRivincitaX|votoRivincitaO
+ID_giocatoreX|ID_giocatoreO|difficoltà|cella0.cella1.cella2.cella3.cella4.cella5.cella6.cella7.cella8|votoRivincitaX|votoRivincitaO
 ```
 
-- `ID_giocatoreX` / `ID_giocatoreO`: ID utente Discord (o `IA` per modalita IA)
-- `difficolta`: `e` (Facile), `n` (Normale), `h` (Difficile), `i` (Impossibile)
-- `cella0`-`cella8`: `e` (vuota), `X`, o `O`
-- `votoRivincitaX` / `votoRivincitaO`: `y` (votato) o `n` (non votato)
+- `ID_giocatoreX` / `ID_giocatoreO`: ID utente Discord (o `IA`)
+- `difficoltà`: `e` Facile, `n` Normale, `h` Difficile, `i` Impossibile
+- `cella0`–`cella8`: `e` vuota, `X` o `O`
+- `votoRivincitaX` / `votoRivincitaO`: `y` o `n`
 
-Questo rende ogni partita indipendente — partite simultanee illimitate nello stesso canale.
+Siccome non dipende da variabili del server, ogni partita è autonoma e puoi averne diverse in corso nello stesso canale.
 
-### Difficolta IA
+### Difficoltà IA
 
-| Difficolta | Strategia |
-|-----------|-----------|
-| **Facile** | Mosse casuali |
-| **Normale** | Vinci se possibile, blocca se minacciato, altrimenti casuale |
-| **Difficile** | Vinci, blocca, crea fork, blocca fork dell'avversario, centro, angolo opposto, angolo, lato |
-| **Impossibile** | **Minimax reale** — mossa ottimale precomputata per tutti i 19,683 stati. Non perde mai. |
+| Difficoltà | Strategia |
+|-----------|----------|
+| Facile | Mosse casuali |
+| Normale | Vince se può, blocca se c'è minaccia, altrimenti a caso |
+| Difficile | Vince, blocca, crea fork, blocca fork dell'avversario, centro, angolo opposto, angolo, lato |
+| Impossibile | Minimax con tabella precomputata per tutti i 19.683 stati. Non perde mai. |
 
-### Algoritmo minimax
+### L'algoritmo minimax
 
-L'IA Impossibile usa una **tabella minimax** precomputata in Python:
+Per la difficoltà Impossibile:
 
-1. **Solver Python**: Esegue un minimax esaustivo su tutti i 19,683 stati possibili del tabellone (3^9). Per ogni stato valido dove e il turno dell'IA, calcola la mossa ottimale assumendo gioco perfetto dell'avversario.
+1. `minimax_solver.py` esegue un minimax esaustivo su tutti i 3⁹ = 19.683 stati possibili del tabellone, e per ognuno in cui tocca alla IA calcola la mossa ottimale assumendo che l'avversario giochi perfettamente.
+2. Quello viene salvato come tabella di 19.683 caratteri: ogni posizione corrisponde a uno stato (indicizzato da un hash in base 3), e il carattere lì è la mossa ottimale (0-8), o `-` se quello stato non è valido.
+3. In BDFD: le celle vengono mappate a numeri (`e=0`, `iaSym=1`, `userSym=2`), si calcola l'hash come `hash = n0*1 + n1*3 + n2*9 + ... + n8*6561`, lo si cerca con `$splitText[$sum[$var[hash];1]]`, e quella mossa viene giocata.
 
-2. **Tabella precomputata** (19,683 caratteri): Ogni posizione nella stringa rappresenta uno stato del tabellone (indicizzato da hash base-3). Il carattere in quella posizione e la mossa ottimale (0-8) o `-` se lo stato non e valido.
+### Assegnazione casuale di X/O
 
-3. **In BDFD**, per la difficolta Impossibile:
-   - Mappa le celle a numeri: `e=0`, `iaSym=1`, `userSym=2`
-   - Calcola l'hash: `hash = n0*1 + n1*3 + n2*9 + ... + n8*6561`
-   - Consulta la tabella: `$splitText[$sum[$var[hash];1]]`
-   - Esegue quella mossa ottimale
+All'inizio di una partita (nuova, riavvio o rivincita), `$random[0;2]` decide chi è X: metà delle volte inizi tu, metà inizia la IA (e gioca il centro automaticamente). La IA è parametrizzata con `$var[iaSym]` e `$var[userSym]`, quindi funziona uguale sia che sia X o O.
 
-### Assegnazione casuale X/O
+### Rivincita (PvP)
 
-All'avvio di una partita (nuova, riavvio o rivincita), un numero casuale (`$random[0;2]`) determina chi e X e chi e O:
+Quando finisce una partita PvP, il pulsante cambia in "Rivincita (0/2)". Ogni giocatore vota premendolo, e quando arriva a 2/2 il tabellone si resetta con una nuova assegnazione casuale di X/O. Solo i due giocatori originali possono votare; se un altro ci prova, riceve un errore.
 
-- **50% di probabilita**: L'utente e X (inizia per primo)
-- **50% di probabilita**: L'IA e X (inizia per prima, gioca il centro automaticamente)
+## Struttura del repo
 
-L'IA e completamente parametrizzata con `$var[iaSym]` e `$var[userSym]` per funzionare correttamente indipendentemente dal fatto che sia X o O.
-
-### Sistema di rivincita (PvP)
-
-Dopo che una partita PvP termina:
-1. Il pulsante cambia in "Rivincita (0/2)"
-2. Ogni giocatore preme per votare — il pulsante si aggiorna a "Rivincita (1/2)"
-3. Quando entrambi votano (2/2), il tabellone si resetta con nuova assegnazione casuale X/O
-4. Solo i due giocatori possono votare; altri ricevono un errore
-
----
+```
+Repository/
+│
+├── README.md                          (versione inglese)
+├── LEGGIMI.md                         (questo file)
+│
+├── English/
+│   ├── Tic-Tac-Toe_Code.md
+│   ├── Callback 1 ($onInteraction).md
+│   └── Callback 2 ($onInteraction).md
+│
+└── Italiano/
+    ├── Tris_BDFD.md
+    ├── Callback 1 ($onInteraction).md
+    └── Callback 2 ($onInteraction).md
+```
 
 ## Uso
 
-### Gioca vs IA
+Contro la IA: scrivi `!ttt` e scegli una difficoltà dal menu a tendina. Ti verrà assegnato X o O a caso.
 
-```
-!ttt
-```
+Contro un altro giocatore: `!ttt @utente`. Il giocatore sfidato accetta con il pulsante, e X/O viene assegnato a caso.
 
-Seleziona una difficolta dal menu a discesa. Ti sara assegnato X o O casualmente.
+Durante la partita: clicca una cella vuota (⬜) per giocare, "Arrenditi" per abbandonare, e quando finisce "Riavvia" (vs IA) o "Rivincita" (PvP) per ripartire.
 
-### Gioca vs un altro giocatore
+## Dettagli tecnici
 
-```
-!ttt @utente
-```
-
-Il giocatore sfidato deve premere "Accetta" per iniziare. X/O e assegnato casualmente.
-
-### Durante la partita
-
-- Clicca su qualsiasi cella vuota (⬜) per posizionare il tuo segno
-- Premi "Arrenditi" per arrenderti
-- Dopo la fine della partita, premi "Riavvia" (vs IA) o "Rivincita" (PvP) per giocare di nuovo
-
----
+- Linguaggio: BDScript 2 (usa `$eval`, `$var`, `$try`, `$async`)
+- Ogni callback resta sotto il limite di 65.500 caratteri di BDFD
+- Nessuna dipendenza esterna, tutto vive nei 3 comandi
+- Nessuna variabile del server, lo stato va nei footer degli embed
 
 ## Crediti
 
-Creato da **Nexusify team**.
-
-Sei libero di usare questo codice, ma per favore non rimuovere i crediti. Ha richiesto 3 mesi di lavoro — rispetta lo sforzo.
-
----
+Fatto dal Nexusify team. Sentiti libero di usare il codice, mantieni solo i crediti.
 
 ## Licenza
 
-Uso libero con crediti. Non reclamare il codice come tuo.
+Uso libero con crediti. Non presentarlo come tuo.
