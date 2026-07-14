@@ -2,7 +2,7 @@
 
 Juego de Tres en Raya para Bot Designer For Discord (BDFD), con modo PvP y modo contra IA en 4 dificultades. La dificultad Imposible usa minimax con una tabla precalculada de los 19,683 estados posibles del tablero, así que no pierde nunca.
 
-## Qué incluye
+## Características
 
 - 4 niveles de IA: Fácil, Normal, Difícil, Imposible (minimax)
 - Modo PvP con botones de aceptar/rechazar el reto
@@ -24,7 +24,7 @@ Hacen falta 3 comandos en tu bot:
 | 2 | `$onInteraction` | BDScript 2 | `Callback 1 ($onInteraction).md` | Menú, retos, rendirse, revancha, reiniciar |
 | 3 | `$onInteraction` | BDScript 2 | `Callback 2 ($onInteraction).md` | Jugadas + IA minimax |
 
-**¿Por qué dos callbacks `$onInteraction`?** BDFD permite tener varios y los ejecuta todos en cada interacción. La tabla minimax ocupa 19,683 caracteres y no entra junto al resto del código en un solo callback, así que se dividió en dos: el primero lleva el menú de dificultad, aceptar/rechazar reto y rendirse/revancha/reiniciar; el segundo lleva las jugadas y la tabla minimax. Cada uno usa `$stop` para no pisarse con el otro.
+**¿Por qué dos callbacks `$onInteraction`?** La tabla minimax ocupa 19,683 caracteres y no entra junto al resto del código en un solo callback, así que se dividió en dos. Cada uno usa `$stop` para no pisarse con el otro.
 
 Permisos que necesita el bot: enviar mensajes, gestionar mensajes (para poder editar el tablero) y usar componentes (botones y menús).
 
@@ -56,11 +56,7 @@ Como no depende de variables de servidor, cada partida queda aislada y podés te
 
 ### El algoritmo minimax
 
-Para la dificultad Imposible:
-
-1. `minimax_solver.py` corre un minimax exhaustivo sobre los 3⁹ = 19,683 estados posibles del tablero, y para cada uno donde le toca mover a la IA calcula la jugada óptima asumiendo que el rival juega perfecto.
-2. El resultado se guarda como una tabla de 19,683 caracteres: cada posición corresponde a un estado (indexado por un hash en base 3), y el carácter ahí es la jugada óptima (0-8), o `-` si ese estado no es válido.
-3. En BDFD: se mapean las celdas a números (`e=0`, `iaSym=1`, `userSym=2`), se calcula `hash = n0*1 + n1*3 + n2*9 + ... + n8*6561`, se busca en la tabla con `$splitText[$sum[$var[hash];1]]` y se juega esa casilla.
+Para la dificultad Imposible, un script de Python precalcula la jugada óptima para los 19,683 estados posibles del tablero y los guarda en una tabla de consulta. En BDFD, las celdas se mapean a números, se hashea el estado del tablero, se busca la jugada óptima en la tabla y se juega esa casilla.
 
 ### Asignación de X/O
 
@@ -70,25 +66,6 @@ Al empezar una partida (nueva, reinicio o revancha), `$random[0;2]` decide quié
 
 Cuando termina una partida PvP, el botón cambia a "Revancha (0/2)". Cada jugador vota apretándolo, y cuando llega a 2/2 el tablero se reinicia con X/O asignados de nuevo al azar. Solo los dos jugadores originales pueden votar; si otro intenta, le sale error.
 
-## Archivos del repositorio
-
-```
-Repositorio/
-│
-├── README.md                          (versión en inglés)
-├── LEEME.md                           (este archivo)
-│
-├── English/
-│   ├── Tic-Tac-Toe_Code.md
-│   ├── Callback 1 ($onInteraction).md
-│   └── Callback 2 ($onInteraction).md
-│
-└── Español/
-    ├── Tres-en-raya_BDFD.md
-    ├── Callback 1 ($onInteraction).md
-    └── Callback 2 ($onInteraction).md
-```
-
 ## Uso
 
 Contra la IA: escribí `!ttt` y elegí dificultad en el menú desplegable. Se te asigna X u O al azar.
@@ -96,13 +73,6 @@ Contra la IA: escribí `!ttt` y elegí dificultad en el menú desplegable. Se te
 Contra otro jugador: `!ttt @usuario`. El retado acepta con el botón, y X/O también se reparte al azar.
 
 Durante la partida: clic en una casilla vacía (⬜) para jugar, "Rendirse" para abandonar, y al terminar "Reiniciar" (vs IA) o "Revancha" (PvP).
-
-## Detalles técnicos
-
-- Lenguaje: BDScript 2 (usa `$eval`, `$var`, `$try`, `$async`)
-- Cada callback se mantiene por debajo del límite de 65,500 caracteres de BDFD
-- Sin dependencias externas, todo vive en los 3 comandos
-- Sin variables de servidor, el estado va en los footers de los embeds
 
 ## Créditos
 
