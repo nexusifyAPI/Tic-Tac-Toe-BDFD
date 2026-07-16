@@ -54,9 +54,6 @@ Since it doesn't rely on server variables, each game is self-contained and you c
 | Hard | Wins, blocks, sets up forks, blocks opponent forks, center, opposite corner, corner, side |
 | Impossible | Minimax with a precomputed table for all 19,683 states. Never loses. |
 
-### The minimax algorithm
-
-For the Impossible difficulty, a Python script precomputes the optimal move for all 19,683 possible board states and stores them in a lookup table. In BDFD, cells are mapped to numbers, the board state is hashed, the optimal move is looked up in the table, and that move gets played.
 
 ### Random X/O assignment
 
